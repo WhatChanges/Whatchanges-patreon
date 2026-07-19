@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Warsh Vow — Why Cool CPI Didn't Save Gold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e0e10;
+    --bg-raised:#161618;
+    --bone:#ede8df;
+    --bone-dim:#9c968a;
+    --hair:#2b2b2e;
+    --gold:#c9a24b;
+    --gold-dim:#7a6534;
+    --silver:#a8adb5;
+    --silver-dim:#5f636a;
+    --red:#c4522e;
+    --green:#5a8c6e;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{background:var(--bg);}
+  body{
+    background:var(--bg);
+    color:var(--bone);
+    font-family:'IBM Plex Serif', Georgia, serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'IBM Plex Mono', 'SF Mono', monospace;}
+  .wrap{max-width:920px; margin:0 auto; padding:0 28px;}
+
+  /* ===== TICKER ===== */
+  .ticker{
+    background:var(--bg-raised);
+    border-bottom:1px solid var(--hair);
+    overflow:hidden;
+    white-space:nowrap;
+    padding:9px 0;
+  }
+  .ticker-track{
+    display:inline-block;
+    animation:scroll 32s linear infinite;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:.03em;
+  }
+  .ticker-track span{margin-right:44px; color:var(--bone-dim);}
+  .ticker-track .up{color:var(--green);}
+  .ticker-track .down{color:var(--red);}
+  @keyframes scroll{
+    0%{transform:translateX(0);}
+    100%{transform:translateX(-50%);}
+  }
+
+  /* ===== MASTHEAD ===== */
+  .masthead{
+    padding:64px 0 40px;
+    border-bottom:1px solid var(--hair);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--gold);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px; height:7px;
+    background:var(--red);
+    border-radius:50%;
+    display:inline-block;
+    box-shadow:0 0 8px var(--red);
+  }
+  h1{
+    font-family:'IBM Plex Serif', serif;
+    font-weight:700;
+    font-size:clamp(34px, 5.2vw, 58px);
+    line-height:1.06;
+    letter-spacing:-0.01em;
+    max-width:820px;
+  }
+  h1 em{
+    font-style:italic;
+    color:var(--gold);
+  }
+  .dek{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    color:var(--bone-dim);
+    margin-top:22px;
+    max-width:560px;
+  }
+  .byline{
+    margin-top:34px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--bone-dim);
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .byline strong{color:var(--bone);}
+
+  /* ===== PRICE READOUT (hero signature) ===== */
+  .readout{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1px;
+    background:var(--hair);
+    border:1px solid var(--hair);
+    margin:44px 0 0;
+  }
+  .readout-cell{
+    background:var(--bg);
+    padding:26px 28px;
+  }
+  .readout-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--bone-dim);
+    margin-bottom:10px;
+  }
+  .readout-price{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:clamp(30px, 4.5vw, 46px);
+    line-height:1;
+  }
+  .readout-price.gold{color:var(--gold);}
+  .readout-price.silver{color:var(--silver);}
+  .readout-delta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    margin-top:10px;
+    color:var(--red);
+  }
+  .readout-target{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--bone-dim);
+    margin-top:2px;
+    text-decoration:line-through;
+    text-decoration-color:var(--hair);
+  }
+
+  /* ===== ARTICLE BODY ===== */
+  .section{
+    padding:56px 0;
+    border-bottom:1px solid var(--hair);
+  }
+  .section:last-of-type{border-bottom:none;}
+  .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:14px;
+  }
+  h2{
+    font-family:'IBM Plex Serif', serif;
+    font-weight:700;
+    font-size:clamp(24px,3.2vw,32px);
+    margin-bottom:20px;
+    letter-spacing:-0.01em;
+  }
+  h3{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin:28px 0 12px;
+  }
+  p{
+    font-size:17px;
+    color:#d9d3c7;
+    max-width:700px;
+    margin-bottom:16px;
+  }
+  p strong{color:var(--bone); font-weight:600;}
+  p.lede{
+    font-size:19px;
+    color:var(--bone);
+  }
+  blockquote{
+    font-family:'IBM Plex Serif', serif;
+    font-style:italic;
+    font-size:22px;
+    color:var(--bone);
+    border-left:2px solid var(--gold);
+    padding:4px 0 4px 24px;
+    margin:28px 0;
+    max-width:640px;
+  }
+  .callout{
+    background:var(--bg-raised);
+    border:1px solid var(--hair);
+    border-left:3px solid var(--red);
+    padding:20px 24px;
+    margin:24px 0;
+    max-width:700px;
+  }
+  .callout .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--red);
+    margin-bottom:8px;
+  }
+  .callout p{margin-bottom:0; font-size:15.5px;}
+
+  /* ===== TIMELINE ===== */
+  .timeline{margin:28px 0; max-width:700px;}
+  .timeline-item{
+    display:grid;
+    grid-template-columns:96px 1fr;
+    gap:18px;
+    padding:14px 0;
+    border-top:1px solid var(--hair);
+  }
+  .timeline-item:first-child{border-top:none;}
+  .timeline-date{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--gold);
+    padding-top:2px;
+  }
+  .timeline-text{font-size:15.5px; color:#d9d3c7;}
+
+  /* ===== CHART CONTAINERS ===== */
+  .chart-box{
+    background:var(--bg-raised);
+    border:1px solid var(--hair);
+    padding:26px 26px 14px;
+    margin:30px 0;
+  }
+  .chart-title{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--bone-dim);
+    margin-bottom:18px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .chart-title .live{color:var(--red);}
+  svg text{font-family:'IBM Plex Mono', monospace;}
+
+  /* ===== LADDER (signature element) ===== */
+  .ladder-wrap{margin:30px 0;}
+  .ladder{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  .ladder-col{
+    background:var(--bg-raised);
+    border:1px solid var(--hair);
+  }
+  .ladder-head{
+    padding:16px 20px;
+    border-bottom:1px solid var(--hair);
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+  }
+  .ladder-head .metal{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+  .ladder-head.gold .metal{color:var(--gold);}
+  .ladder-head.silver .metal{color:var(--silver);}
+  .ladder-head .px{font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--bone-dim);}
+  .rung{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:13px 20px;
+    border-bottom:1px solid var(--hair);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+  }
+  .rung:last-child{border-bottom:none;}
+  .rung .lvl-label{color:var(--bone-dim); font-size:11px; letter-spacing:.06em; text-transform:uppercase;}
+  .rung .lvl-price{font-weight:600;}
+  .rung.resistance .lvl-price{color:var(--red);}
+  .rung.current{background:rgba(201,162,75,0.07);}
+  .rung.current .lvl-price{color:var(--bone); font-size:15px;}
+  .rung.support .lvl-price{color:var(--green);}
+  .rung.break .lvl-price{color:var(--bone-dim);}
+
+  /* ===== SCENARIOS ===== */
+  .scenarios{display:flex; flex-direction:column; gap:1px; background:var(--hair); margin:28px 0; border:1px solid var(--hair);}
+  .scenario{background:var(--bg); padding:22px 24px;}
+  .scenario-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;}
+  .scenario-name{font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:14px; letter-spacing:.03em;}
+  .scenario-prob{font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--bone-dim);}
+  .prob-bar-track{height:6px; background:var(--hair); margin:10px 0 14px; overflow:hidden;}
+  .prob-bar-fill{height:100%; background:var(--gold);}
+  .scenario p{font-size:14.5px; margin-bottom:6px; max-width:none;}
+  .scenario .impact{font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--bone-dim); margin-top:8px;}
+  .scenario .impact b{color:var(--bone); font-weight:600;}
+
+  /* ===== WATCHLIST TABLE ===== */
+  table{width:100%; border-collapse:collapse; margin:28px 0; font-family:'IBM Plex Mono', monospace; font-size:13.5px;}
+  th{
+    text-align:left;
+    padding:10px 14px;
+    color:var(--bone-dim);
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    border-bottom:1px solid var(--hair);
+    font-weight:500;
+  }
+  td{padding:12px 14px; border-bottom:1px solid var(--hair); color:#d9d3c7;}
+  tr:last-child td{border-bottom:none;}
+  td.date{color:var(--gold); white-space:nowrap;}
+
+  /* ===== SOURCES / FOOTER ===== */
+  .sources{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--bone-dim);
+    line-height:2;
+  }
+  .sources .row{display:flex; justify-content:space-between; border-bottom:1px dotted var(--hair); padding:5px 0; gap:12px;}
+  .sources .row span:first-child{color:#b8b2a5;}
+  .sources .row span:last-child{color:var(--bone-dim); text-align:right;}
+
+  .disclaimer{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--bone-dim);
+    background:var(--bg-raised);
+    border:1px solid var(--hair);
+    padding:16px 20px;
+    margin:24px 0;
+  }
+
+  .signoff{
+    padding:60px 0 80px;
+    text-align:center;
+  }
+  .signoff .mark{
+    font-family:'IBM Plex Serif', serif;
+    font-style:italic;
+    font-size:22px;
+    color:var(--gold);
+  }
+  .signoff .sub{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--bone-dim);
+    margin-top:10px;
+  }
+
+  @media (max-width:640px){
+    .readout{grid-template-columns:1fr;}
+    .ladder{grid-template-columns:1fr;}
+    .timeline-item{grid-template-columns:78px 1fr; gap:12px;}
+    table{font-size:12px;}
+    th,td{padding:9px 8px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ticker">
+  <div class="ticker-track mono" id="tickerTrack"></div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Research Notes · July 19, 2026</div>
+    <h1>The Warsh Vow: Why Cool CPI <em>Didn't</em> Save Gold</h1>
+    <p class="dek">June CPI printed cool, exactly on script. The playbook said rally. Gold and silver broke down instead. Here's the honest autopsy — and the three things nobody priced in.</p>
+    <div class="byline">
+      <span>What Changes · <strong>Mae</strong></span>
+      <span>9 days to FOMC · Jul 28–29</span>
+    </div>
+
+    <div class="readout">
+      <div class="readout-cell">
+        <div class="readout-label">Gold (XAU/USD)</div>
+        <div class="readout-price gold">$3,982</div>
+        <div class="readout-delta">below the $4,000 floor</div>
+        <div class="readout-target">playbook target: $4,200</div>
+      </div>
+      <div class="readout-cell">
+        <div class="readout-label">Silver (XAG/USD)</div>
+        <div class="readout-price silver">$55.21</div>
+        <div class="readout-delta">below $58 support, approaching $55</div>
+        <div class="readout-target">playbook target: $65</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- PARADOX -->
+  <section class="section">
+    <div class="kicker">The Paradox</div>
+    <p class="lede">Five days ago, June CPI printed 3.5%. Consensus was 3.8%. The print was cool — exactly the Scenario A setup we outlined in the CPI preview post.</p>
+    <p>By the playbook, gold should be at $4,200. Silver should be at $65. Instead both metals sit below their own support levels. <strong>The playbook was wrong.</strong> This post explains why — and what happens next.</p>
+    <p>If you've been with us since the NFP reaction video, you know we own our misses. The cool-CPI-means-rally thesis was wrong. Here's the honest autopsy.</p>
+
+    <div class="chart-box">
+      <div class="chart-title"><span>Gold vs. Playbook Target — Last 5 Sessions</span><span class="live">● live read</span></div>
+      <svg id="chartParadoxGold" viewBox="0 0 800 260" width="100%" height="260"></svg>
+    </div>
+  </section>
+
+  <!-- THREE THINGS -->
+  <section class="section">
+    <div class="kicker">Three Misses</div>
+    <h2>What the playbook didn't see coming</h2>
+    <p>Three forces broke the cool-CPI-means-rally thesis. Take them one at a time.</p>
+  </section>
+
+  <!-- ONE: WARSH VOW -->
+  <section class="section">
+    <div class="kicker">01 · The Warsh Vow</div>
+    <h2>The Fed chair refused to play along</h2>
+    <p>On July 16 — two days after the cool CPI print — Fed Chair Kevin Warsh spoke to Congress. The market expected him to acknowledge the cooling inflation and signal a September cut. He did the opposite.</p>
+
+    <blockquote>"I will disappoint anyone who thinks I will deviate from our 2% inflation target."</blockquote>
+
+    <p>He pledged price stability. He refused to hint at a July rate decision. He committed to the hawkish stance despite the cool CPI. <strong>This was the moment the playbook broke.</strong></p>
+    <p>The playbook assumed Warsh's hike narrative was dead after the weak June NFP (57,000 jobs). It assumed cool CPI would confirm the death. It assumed the market would price in September cuts. Warsh refused to play along — and the market believed him. The dollar stayed strong. Gold and silver stayed weak.</p>
+
+    <h3>The structural shift</h3>
+    <p>This is more than one speech. For 18 months the market has operated under the assumption that weak data means Fed cuts. That assumption is now broken. Warsh is signaling he'll accept labor-market weakness in pursuit of 2% inflation — even a recession, if that's what it takes. This is the <strong>Volcker playbook</strong>: Paul Volcker raised rates into a recession in 1979–1982 to break inflation. Warsh appears to be reading from the same script.</p>
+
+    <div class="callout">
+      <div class="label">If Warsh is serious</div>
+      <p>Weak NFP no longer means "Fed cuts." Cool CPI no longer means "Fed cuts." A recession no longer means "Fed cuts." The only thing that gets Warsh to cut is inflation hitting 2% on a sustained basis — and 3.5% isn't 2%. The "Fed pivot" thesis, the bull case for gold since 2023, isn't paused. It's dead.</p>
+    </div>
+  </section>
+
+  <!-- TWO: IRAN -->
+  <section class="section">
+    <div class="kicker">02 · The Iran Escalation Acceleration</div>
+    <h2>From fragile ceasefire to active conflict</h2>
+    <p>The second miss: Iran escalation accelerated dramatically, faster than the playbook's war-premium assumptions could absorb.</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">Jul 13</div>
+        <div class="timeline-text">Iran expands attacks on Gulf states, declares the Strait of Hormuz closed.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Jul 14</div>
+        <div class="timeline-text">The US–Iran ceasefire formally collapses.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Jul 18</div>
+        <div class="timeline-text">Iran strikes two oil tankers in Hormuz; both catch fire.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Jul 19</div>
+        <div class="timeline-text">Iran kills American troops. The US launches new airstrikes to "swiftly punish" Iran.</div>
+      </div>
+    </div>
+
+    <p>This is no longer a fragile ceasefire with sporadic strikes. This is active, escalating military conflict. Oil prices have spiked — WTI at one-month highs, Brent rising, and the Strait of Hormuz, which carries roughly a fifth of global oil flow, effectively closed.</p>
+
+    <div class="callout">
+      <div class="label">The trap</div>
+      <p>Higher oil eventually means higher inflation. Warsh has vowed to fight inflation. So higher oil means Warsh stays hawkish longer, the dollar stays strong, and precious metals stay weak. The war premium that should help gold is being overwhelmed by the inflation-fear channel that hurts it.</p>
+    </div>
+  </section>
+
+  <!-- THREE: OIL LAG -->
+  <section class="section">
+    <div class="kicker">03 · The Oil Lag Illusion</div>
+    <h2>Cool CPI wasn't the end of the story</h2>
+    <p>The CPI preview post noted that oil feeds into CPI with a two-to-four week lag — June's report only captured the beginning of the oil effect, not the full spike. That was correct. What got missed was the implication.</p>
+    <p>June CPI printed 3.5%, cool, and gold briefly spiked above $4,100 on July 14. But within 24 hours the market realized: June was cool <em>because the oil spike hasn't hit yet.</em> July CPI (released August 12) is expected hot. August CPI (released September 11) is expected hotter still.</p>
+    <p><strong>The market is now pricing in hot inflation for July and August, even though June was cool.</strong> That repricing is why gold reversed and broke through $4,000.</p>
+  </section>
+
+  <!-- REVISED LEVELS / LADDER -->
+  <section class="section">
+    <div class="kicker">The Revised Levels</div>
+    <h2>Forget the old playbook</h2>
+    <p>Here's where gold and silver actually stand as of today, July 19 — support and resistance have effectively swapped places.</p>
+
+    <div class="ladder-wrap">
+      <div class="ladder">
+        <div class="ladder-col">
+          <div class="ladder-head gold">
+            <span class="metal">Gold · XAU</span>
+            <span class="px">$3,982</span>
+          </div>
+          <div class="rung resistance"><span class="lvl-label">Resistance</span><span class="lvl-price">$4,000</span></div>
+          <div class="rung current"><span class="lvl-label">Current</span><span class="lvl-price">$3,982</span></div>
+          <div class="rung support"><span class="lvl-label">Support</span><span class="lvl-price">$3,950</span></div>
+          <div class="rung break"><span class="lvl-label">If broken</span><span class="lvl-price">$3,800</span></div>
+        </div>
+        <div class="ladder-col">
+          <div class="ladder-head silver">
+            <span class="metal">Silver · XAG</span>
+            <span class="px">$55.21</span>
+          </div>
+          <div class="rung resistance"><span class="lvl-label">Resistance</span><span class="lvl-price">$58</span></div>
+          <div class="rung current"><span class="lvl-label">Current</span><span class="lvl-price">$55.21</span></div>
+          <div class="rung support"><span class="lvl-label">Support</span><span class="lvl-price">$55</span></div>
+          <div class="rung break"><span class="lvl-label">If broken</span><span class="lvl-price">$50</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p>What used to be support is now resistance for both metals. The $4,000 floor on gold is broken; only a structural bid from PBOC and Tether prevents a bigger crash. Silver is edging toward the 2011 bearish analog — a multi-year drift lower.</p>
+
+    <h3>Also on the board</h3>
+    <table>
+      <tr><th>Instrument</th><th>Level</th><th>Watch</th></tr>
+      <tr><td>WTI Crude</td><td>~$75–78</td><td>Breaks $80 → inflation narrative cements</td></tr>
+      <tr><td>Dollar Index (DXY)</td><td>Strong, rising</td><td>New highs → further headwind for metals</td></tr>
+      <tr><td>10-Year Yield</td><td>~4.40–4.45%</td><td>Breaks 4.50% → confirms hawkish pricing</td></tr>
+    </table>
+  </section>
+
+  <!-- SCENARIOS -->
+  <section class="section">
+    <div class="kicker">FOMC · July 28–29</div>
+    <h2>Three scenarios, nine days out</h2>
+    <p>The probability of the hawkish scenario has climbed sharply since the CPI print — from 20% pre-CPI to 35% today.</p>
+
+    <div class="chart-box">
+      <div class="chart-title"><span>Scenario Probability — Then vs. Now</span><span>pre-CPI → today</span></div>
+      <svg id="chartScenarioShift" viewBox="0 0 800 220" width="100%" height="220"></svg>
+    </div>
+
+    <div class="scenarios">
+      <div class="scenario">
+        <div class="scenario-head">
+          <span class="scenario-name">Scenario A — September Cut Signal</span>
+          <span class="scenario-prob">15% probability</span>
+        </div>
+        <div class="prob-bar-track"><div class="prob-bar-fill" style="width:15%; background:var(--green);"></div></div>
+        <p>Despite the hawkish vow, Warsh acknowledges cool June CPI and signals a September cut is possible if July/August data cooperate. Low probability — Warsh has explicitly said he'll "disappoint" rate-cut expectations.</p>
+        <div class="impact">Gold → <b>$4,100–4,150</b> &nbsp;·&nbsp; Silver → <b>$60–62</b></div>
+      </div>
+      <div class="scenario">
+        <div class="scenario-head">
+          <span class="scenario-name">Scenario B — Hold, Wait-and-See</span>
+          <span class="scenario-prob">50% probability · base case</span>
+        </div>
+        <div class="prob-bar-track"><div class="prob-bar-fill" style="width:50%;"></div></div>
+        <p>Warsh holds rates at 3.50–3.75%, acknowledges cool CPI but emphasizes oil-driven inflation risk. No clear signal on September. Most likely outcome — Warsh plays for time.</p>
+        <div class="impact">Gold → <b>chops $3,900–4,050</b> &nbsp;·&nbsp; Silver → <b>chops $52–58</b></div>
+      </div>
+      <div class="scenario">
+        <div class="scenario-head">
+          <span class="scenario-name">Scenario C — September Hike Signal</span>
+          <span class="scenario-prob">35% probability</span>
+        </div>
+        <div class="prob-bar-track"><div class="prob-bar-fill" style="width:35%; background:var(--red);"></div></div>
+        <p>Warsh holds rates but explicitly signals a September hike is on the table if oil-driven inflation materializes in July/August CPI. Probability has risen sharply on Iran escalation and the oil spike.</p>
+        <div class="impact">Gold → <b>breaks $3,950, targets $3,800</b> &nbsp;·&nbsp; Silver → <b>breaks $55, targets $50</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRADE IMPLICATIONS -->
+  <section class="section">
+    <div class="kicker">Trade Implications</div>
+    <h2>What this means for your position</h2>
+
+    <h3>If you're long metals</h3>
+    <p><strong>Gold:</strong> hold, but watch $3,950. Below it, the thesis has changed. The structural bid — PBOC plus Tether — is the only thing preventing a crash, but structural bids can be overwhelmed by macro headwinds.</p>
+    <p><strong>Silver:</strong> more serious. $55 is approaching 2011 analog territory. If silver breaks $55, the bearish case is fully live — consider reducing exposure.</p>
+
+    <h3>If you're in cash</h3>
+    <p>Wait for FOMC. July 28 is 9 days away and the decision clarifies everything — don't pre-position.</p>
+    <table>
+      <tr><th>Outcome</th><th>Action</th></tr>
+      <tr><td>Scenario A — cut signal</td><td>Buy gold aggressively</td></tr>
+      <tr><td>Scenario B — wait-and-see</td><td>Small gold position, avoid silver</td></tr>
+      <tr><td>Scenario C — hike signal</td><td>Stay in cash, metals have further to fall</td></tr>
+    </table>
+
+    <div class="callout">
+      <div class="label">The Tether Floor</div>
+      <p>Tether is still accumulating gold toward its 15% allocation target, regardless of Warsh, Iran, or CPI. That buying is slow and steady — it can prevent a slow bleed but can't stop a panic selloff. If gold crashes through $3,950 on a Scenario C, the floor holds at $3,800, not $4,000.</p>
+    </div>
+  </section>
+
+  <!-- WATCH THIS WEEK -->
+  <section class="section">
+    <div class="kicker">What To Watch</div>
+    <h2>The next 9 days decide the next 6 months</h2>
+    <table>
+      <tr><th>Date</th><th>Event</th></tr>
+      <tr><td class="date">Mon Jul 20</td><td>US markets open — watch gold $3,950 and silver $55</td></tr>
+      <tr><td class="date">Tue–Thu</td><td>Oil price action — WTI breaks $80 cements the inflation narrative</td></tr>
+      <tr><td class="date">Fri Jul 24</td><td>Weekly jobless claims (secondary signal)</td></tr>
+      <tr><td class="date">Sun Jul 26</td><td>Pre-FOMC positioning</td></tr>
+      <tr><td class="date">Mon Jul 27</td><td>Last full trading day before FOMC</td></tr>
+      <tr><td class="date">Tue–Wed Jul 28–29</td><td>FOMC meeting. Decision 2 PM ET, press conference 2:30 PM ET</td></tr>
+    </table>
+    <p style="font-size:14.5px; color:var(--bone-dim);">The FOMC reaction video drops on YouTube within 2 hours of the decision. Full research notes drop on Patreon within 6 hours.</p>
+  </section>
+
+  <!-- HONEST TAKE -->
+  <section class="section">
+    <div class="kicker">The Honest Take</div>
+    <h2>This is the Volcker moment</h2>
+    <p>The playbook was wrong because it assumed the Fed would respond to data. Warsh is not responding to data — he's responding to his own framework, and that framework says 2% inflation, no matter what.</p>
+    <p>Volcker broke the back of inflation in 1979–1982 by causing a recession. Warsh appears willing to do the same. If he succeeds, gold's structural bid stays intact — PBOC and Tether keep buying — but the short-term path is down, not up.</p>
+    <p><strong>The bull case for gold is now a 2027–2028 story, not a 2026 story.</strong> The bear case — the 2011 analog, drift lower for years — is a real risk for the next 6–12 months.</p>
+    <p class="lede">Watch $3,950 on gold. Watch $55 on silver. Watch $80 on oil. Watch FOMC on July 28. The next 9 days decide the next 6 months.</p>
+  </section>
+
+  <!-- DISCLAIMER + SOURCES -->
+  <section class="section">
+    <div class="disclaimer">⚠ All content is for informational and educational purposes only. Nothing here is financial advice. Always do your own research.</div>
+
+    <div class="kicker" style="margin-top:32px;">Data Verified · July 19, 2026</div>
+    <div class="sources">
+      <div class="row"><span>June CPI</span><span>3.5% YoY (BLS, Jul 14) — below 3.8% consensus</span></div>
+      <div class="row"><span>CPI MoM</span><span>-0.4% (BLS) — first decline in months</span></div>
+      <div class="row"><span>May CPI</span><span>4.2% YoY (BLS)</span></div>
+      <div class="row"><span>Warsh vow</span><span>Jul 16 — "will disappoint" rate-cut expectations</span></div>
+      <div class="row"><span>Iran kills American troops</span><span>Jul 19</span></div>
+      <div class="row"><span>US new airstrikes on Iran</span><span>Jul 19</span></div>
+      <div class="row"><span>Iran tanker attacks, Hormuz</span><span>Jul 18</span></div>
+      <div class="row"><span>Hormuz status</span><span>Effectively closed</span></div>
+      <div class="row"><span>Gold (Jul 19)</span><span>$3,982 (Kitco)</span></div>
+      <div class="row"><span>Silver (Jul 19)</span><span>$55.21 (Kitco)</span></div>
+      <div class="row"><span>FOMC meeting</span><span>Jul 28–29</span></div>
+    </div>
+  </section>
+
+  <div class="signoff">
+    <div class="mark">"That's what changes. I'm Mae. Stay sharp."</div>
+    <div class="sub">What Changes · Research Notes</div>
+  </div>
+
+</main>
+
+<script>
+// ---------- Ticker ----------
+const tickerData = [
+  {l:'XAU/USD', v:'3,982.00', d:'-1.4%', dir:'down'},
+  {l:'XAG/USD', v:'55.21', d:'-3.0%', dir:'down'},
+  {l:'WTI CRUDE', v:'~77.40', d:'+2.1%', dir:'up'},
+  {l:'DXY', v:'strong / rising', d:'', dir:'up'},
+  {l:'US10Y', v:'4.42%', d:'', dir:'up'},
+  {l:'FOMC', v:'T-9 DAYS', d:'Jul 28–29', dir:''},
+];
+const track = document.getElementById('tickerTrack');
+function renderTicker(){
+  let html = '';
+  for(let i=0;i<2;i++){
+    tickerData.forEach(t=>{
+      const cls = t.dir === 'up' ? 'up' : (t.dir === 'down' ? 'down' : '');
+      html += `<span>${t.l} <b class="${cls}">${t.v}${t.d ? ' '+ (t.dir==='down'?'▼':'▲') +' '+t.d : ''}</b></span>`;
+    });
+  }
+  track.innerHTML = html;
+}
+renderTicker();
+
+// ---------- SVG helpers ----------
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs){
+  const e = document.createElementNS(NS, tag);
+  for(const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+
+// ---------- Chart 1: Gold path vs playbook target ----------
+(function(){
+  const svg = document.getElementById('chartParadoxGold');
+  const W=800,H=260, padL=54, padR=20, padT=20, padB=34;
+  const days = ['Jul 14','Jul 15','Jul 16','Jul 17','Jul 18','Jul 19'];
+  const actual = [4080, 4055, 4010, 3995, 3986, 3982];
+  const target = [4200, 4200, 4200, 4200, 4200, 4200];
+  const yMin = 3900, yMax = 4250;
+  const x = i => padL + (W-padL-padR) * (i/(days.length-1));
+  const y = v => padT + (H-padT-padB) * (1 - (v-yMin)/(yMax-yMin));
+
+  // gridlines
+  [3900,3975,4050,4125,4200].forEach(v=>{
+    const gl = el('line', {x1:padL, x2:W-padR, y1:y(v), y2:y(v), stroke:'#2b2b2e', 'stroke-width':1});
+    svg.appendChild(gl);
+    const t = el('text', {x:padL-10, y:y(v)+4, 'text-anchor':'end', 'font-size':10, fill:'#9c968a'});
+    t.textContent = '$'+v.toLocaleString();
+    svg.appendChild(t);
+  });
+
+  // target line (dashed)
+  let dPath = target.map((v,i)=> (i===0?'M':'L')+x(i)+','+y(v)).join(' ');
+  svg.appendChild(el('path', {d:dPath, fill:'none', stroke:'#7a6534', 'stroke-width':1.5, 'stroke-dasharray':'4,4'}));
+  svg.appendChild((()=>{const t=el('text',{x:W-padR, y:y(4200)-8,'text-anchor':'end','font-size':10.5, fill:'#7a6534'}); t.textContent='playbook target $4,200'; return t;})());
+
+  // actual line
+  let aPath = actual.map((v,i)=> (i===0?'M':'L')+x(i)+','+y(v)).join(' ');
+  svg.appendChild(el('path', {d:aPath, fill:'none', stroke:'#c9a24b', 'stroke-width':2.5}));
+
+  actual.forEach((v,i)=>{
+    svg.appendChild(el('circle', {cx:x(i), cy:y(v), r: i===actual.length-1?4.5:3, fill: i===actual.length-1?'#c9a24b':'#0e0e10', stroke:'#c9a24b', 'stroke-width':2}));
+  });
+  // final label
+  const last = actual.length-1;
+  const lt = el('text', {x:x(last)-6, y:y(actual[last])-14, 'text-anchor':'end', 'font-size':12, 'font-weight':600, fill:'#ede8df'});
+  lt.textContent = '$'+actual[last].toLocaleString();
+  svg.appendChild(lt);
+
+  // x axis labels
+  days.forEach((d,i)=>{
+    const t = el('text', {x:x(i), y:H-10, 'text-anchor':'middle', 'font-size':10, fill:'#9c968a'});
+    t.textContent = d;
+    svg.appendChild(t);
+  });
+
+  // $4000 floor marker
+  svg.appendChild(el('line', {x1:padL, x2:W-padR, y1:y(4000), y2:y(4000), stroke:'#c4522e', 'stroke-width':1, 'stroke-dasharray':'2,3'}));
+})();
+
+// ---------- Chart 2: Scenario probability shift ----------
+(function(){
+  const svg = document.getElementById('chartScenarioShift');
+  const W=800,H=220, padL=200, padR=40, padT=20, padB=30;
+  const rowH = 46;
+  const data = [
+    {name:'A — Cut Signal', pre:35, now:15, color:'#5a8c6e'},
+    {name:'B — Wait & See', pre:45, now:50, color:'#a8adb5'},
+    {name:'C — Hike Signal', pre:20, now:35, color:'#c4522e'},
+  ];
+  const maxV = 60;
+  const chartW = W - padL - padR;
+  const xScale = v => (v/maxV)*chartW;
+
+  data.forEach((row,i)=>{
+    const cy = padT + i*rowH + rowH/2;
+    // label
+    const lbl = el('text', {x:padL-14, y:cy+4, 'text-anchor':'end', 'font-size':12, fill:'#ede8df', 'font-weight':500});
+    lbl.textContent = row.name;
+    svg.appendChild(lbl);
+
+    // pre-CPI bar (dim, top)
+    svg.appendChild(el('rect', {x:padL, y:cy-14, width:xScale(row.pre), height:10, fill:row.color, opacity:0.35, rx:1}));
+    const preT = el('text', {x:padL+xScale(row.pre)+8, y:cy-6, 'font-size':10, fill:'#9c968a'});
+    preT.textContent = row.pre+'% pre-CPI';
+    svg.appendChild(preT);
+
+    // now bar (bright, bottom)
+    svg.appendChild(el('rect', {x:padL, y:cy+2, width:xScale(row.now), height:12, fill:row.color, rx:1}));
+    const nowT = el('text', {x:padL+xScale(row.now)+8, y:cy+11, 'font-size':11.5, 'font-weight':600, fill:'#ede8df'});
+    nowT.textContent = row.now+'% today';
+    svg.appendChild(nowT);
+  });
+})();
+</script>
+
+</body>
+</html>
